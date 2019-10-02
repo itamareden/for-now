@@ -1,0 +1,44 @@
+@import 'mixins';
+@import 'myColors';
+
+.message-container{
+    @include setPropertyValueIfScreenSmallerThan(575px, margin, 0 15px);
+    @include setPropertyValueIfScreenSmallerThan(450px, margin, 0);
+}
+
+.message-header{
+    font-size: 33px;
+    font-weight: 400;
+    color: $dayTextColor;
+    
+    @include setPropertyValueIfScreenSmallerThan(767px, font-size, 30px);
+    @include setPropertyValueIfScreenSmallerThan(575px, font-size, 28px);
+    @include setPropertyValueIfScreenSmallerThan(450px, font-size, 26px);
+    @include setPropertyValueIfScreenSmallerThan(420px, font-size, 24px);
+}
+
+.message-body{
+    font-size: 24px;
+    line-height: 1.4;
+    
+    @include setPropertyValueIfScreenSmallerThan(767px, font-size, 20px);
+    @include setPropertyValueIfScreenSmallerThan(500px, font-size, 18px);
+    @include setPropertyValueIfScreenSmallerThan(420px, font-size, 17px);
+}
+
+.message-line{
+    margin-bottom: 5px;
+}
+
+.clickable-text{
+    font-style: italic;
+    cursor: pointer;
+    color: $dayTextColor;
+}
+
+.unbreakable{
+    /* the purpose of this class is to chain together the last word of each line with the icon 
+       so that in small screens they will still be together on line break. we're trying to avoid
+       a situation in which the icon is alone in the next line */
+    display: inline-block;
+}

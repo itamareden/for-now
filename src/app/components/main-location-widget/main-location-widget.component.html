@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="col-sm-12 mb-4">
+        <div *ngIf="location && (measurementSystem | async) as ms" class="main-location-container">
+            <div [ngSwitch]="location.weatherDataState">
+                <div *ngSwitchCase="'SUCCESS'">
+                    <div class="main-location-data">
+                        <current-weather-widget [location]="location" [ms]="ms"></current-weather-widget>
+                        <ul class="list-inline m-0 d-block d-md-flex flex-wrap">
+                            <li class="list-inline-item mr-0 d-block d-md-inline-block" 
+                            *ngFor="let dailyForecast of location.forecastWeather; let i = index" 
+                            [ngClass]="i < location.forecastWeather.length - 1 ? 'dynamic-border' : null">
+                                <forecast-widget [dailyForecast]="dailyForecast" [ms]="ms"></forecast-widget>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div *ngSwitchCase="'WAITING'">
+                    <div class="spinner-border spinner-size text-info center-absolute"></div>
+                </div>
+                <div *ngSwitchCase="'ERROR'">
+                    <div class="text-danger p-3 pt-5">
+                        <h3>Oops...</h3>
+                        <h5>An error has occured, please try again later</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

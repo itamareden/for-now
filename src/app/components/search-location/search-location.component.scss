@@ -1,0 +1,62 @@
+@import 'mixins';
+
+.search-box-container{
+    margin-top: 100px;
+}
+
+.results-container{
+    position: absolute;
+    width: 100%;
+    top: 100%;
+    left: 0px;
+    z-index: 1;
+    padding-top: 1px;
+    background: white;
+}
+
+.autocomplete-container{
+    display: block;
+    padding: 12px 20px;
+    cursor: pointer;
+}
+
+.location-font{ 
+    @include setPropertyValueIfScreenSmallerThan(370px, font-size, 15px);
+    @include setPropertyValueIfScreenSmallerThan(370px, font-size, 14px);
+}
+
+.spinner-container{
+    opacity:0.2; 
+    min-height:100px; 
+    border: 1px solid grey;
+}
+
+li.list-group-item{
+    padding: 0;                                                    
+}
+
+li.list-group-item:hover, .highlighted{
+    background: #dbfbf9;
+}
+
+.error-msg{
+    color: red;
+    font-size: 14px;
+    margin-top: 3px;
+    padding-left: 5px;
+}
+
+.text-box{
+    background: dodgerblue;
+    border: 1px solid dodgerblue;
+    color: white;
+    
+    @include setPropertyValueIfScreenSmallerThan(400px, display, none);
+}
+
+.search-input{
+    padding-left: 20px;
+    @include setPropertyValueIfScreenSmallerThan(370px, font-size, 15px);
+    @include setPropertyValueIfScreenSmallerThan(320px, font-size, 14px);
+}
+

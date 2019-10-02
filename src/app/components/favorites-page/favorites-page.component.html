@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-10 col-xl-12">
+        <div *ngIf="!(favoritesArr && favoritesArr.length === 0); else addLocationsMessage">
+            <ul class="list-inline mt-5 d-block d-sm-flex flex-wrap">
+                <li class="list-inline-item mr-0 d-block d-sm-inline-block" *ngFor="let location of favoritesArr">
+                    <favorite-location-widget [location]="location"></favorite-location-widget>
+                </li>
+            </ul>
+        </div>
+        <ng-template #addLocationsMessage>
+            <div class="display-4 mt-5 message-container">
+                <div class="message-header mb-4">No places of interest?</div>
+                <div class="message-body">
+                    <div class="message-line">
+                        <span class="clickable-text" (click)="addLocation('Honolulu')">This </span>
+                        <span>one has summer all year </span>
+                        <div class="unbreakable">
+                            <span class="mr-2">long...</span>
+                            <fa-icon [icon]="summerIcon" [styles]="{'color': 'dodgerblue'}"></fa-icon>
+                        </div>
+                    </div>
+                    <div class="message-line">
+                        <span class="clickable-text" (click)="addLocation('Tokyo')">Here </span>
+                        <span>it's amazing in spring </span>
+                        <div class="unbreakable">
+                            <span class="mr-2">time...</span>
+                            <fa-icon [icon]="templeIcon" [styles]="{'color': '#e43333'}"></fa-icon>
+                        </div>
+                    </div>
+                    <div class="message-line">
+                        <span class="clickable-text" (click)="addLocation('New York')">This </span>
+                        <span>one is presumably the center of the </span>
+                        <div class="unbreakable">
+                            <span class="mr-2">world...</span>
+                            <fa-icon [icon]="appleIcon" [styles]="{'color': '#18bb18'}"></fa-icon>
+                        </div>
+                    </div>
+                    <div class="message-line">
+                        <span>But </span>
+                        <span class="clickable-text" (click)="addLocation('Amsterdam')">this </span>
+                        <span>one is really </span>
+                        <div class="unbreakable">
+                            <span class="mr-2">special!</span>
+                            <fa-icon [icon]="cannabisIcon" [styles]="{'color': 'green'}"></fa-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+    <div class="col-lg-1"></div>
+</div>

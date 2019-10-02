@@ -1,0 +1,48 @@
+<div class="widget-container">
+    <div class="header clearfix">
+        <div class="float-left text-primary date-container">
+            <span class="day-of-week">{{dailyForecast.getDayOfWeek()}}, </span>
+            <span class="date">{{dailyForecast.generateDateTemplate()}}</span>
+        </div>
+    </div>
+    <div class="forecast-widget-body">
+        <div class="weather-image-container">
+            <img [src]="dailyForecast.getWeatherImageSrc()" 
+                 [alt]="dailyForecast.description.text">
+        </div>
+        <div class="temperature">{{dailyForecast.temp.min}}° / {{dailyForecast.temp.max}}°</div>
+        <div class="weather-data-container">
+            <div class="clearfix">
+                <div class="float-left data-description" placement="right" ngbTooltip="Wind Speed">
+                    <fa-icon [icon]="windIcon" class="icon"></fa-icon>
+                </div>
+                <span class="float-right data-value">
+                    <fa-icon [icon]="fanIcon" [spin]="dailyForecast.wind.speed.value > 0 ? true : false" 
+                            [styles]="{'animation-duration': dailyForecast.setWindSpeed()}"></fa-icon>
+                    {{ms === "C" ? dailyForecast.setMetricValue(dailyForecast.wind.speed) : 
+                            dailyForecast.convertMetricToImperial(dailyForecast.wind.speed)}}
+                </span>
+            </div>
+            <hr>
+            <div class="clearfix">
+                <div class="float-left data-description" placement="right" ngbTooltip="Probability / Total">
+                    <fa-icon [icon]="rainIcon" class="icon"></fa-icon>
+                </div>
+                <span class="float-right data-value">
+                    {{dailyForecast.precipitation.probability}}% /
+                    {{ms === "C" ? dailyForecast.setMetricValue(dailyForecast.precipitation.total) : dailyForecast.convertMetricToImperial(dailyForecast.precipitation.total)}}
+                </span>
+            </div>
+            <hr>
+            <div class="clearfix">
+                <div class="float-left data-description" placement="right" ngbTooltip="Sunshine / Daylight">
+                    <fa-icon [icon]="cloudSunIcon" class="icon"></fa-icon>
+                </div>
+                    <span class="float-right data-value">
+                        {{dailyForecast.setDurationInTimeFormat(dailyForecast.sunshineDuration * 60)}} / 
+                        {{dailyForecast.setDurationInTimeFormat(dailyForecast.calcDaylightDuration())}}
+                    </span>
+            </div>
+        </div>
+    </div>
+</div>

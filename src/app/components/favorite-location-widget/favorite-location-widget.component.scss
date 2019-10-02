@@ -1,0 +1,152 @@
+@import 'mixins';
+@import "myColors";
+
+/* because we use ng-bootstrap's tooltip, which enforces us to disable view encapsulation (if for example 
+   we want to change the color of the tooltip) we add the flw (favorite location widget) prefix to each class 
+   name to preserve the encapsulation */
+
+.flw-container{
+    width: 310px;    
+    margin: 40px 30px;
+    padding: 5px 0;
+    border: 1px solid grey;
+    
+    @include setPropertyValueIfScreenSmallerThan(1199px, width, 340px);
+    @include setPropertyValueIfScreenSmallerThan(1199px, margin, 40px 22px);
+    @include setPropertyValueIfScreenSmallerThan(991px, width, 315px);
+    @include setPropertyValueIfScreenSmallerThan(991px, margin, 40px 15px);
+    @include setPropertyValueIfScreenSmallerThan(767px, width, 235px);
+    @include setPropertyValueIfScreenSmallerThan(767px, margin, 40px 10px);
+    @include setPropertyValueIfScreenSmallerThan(575px, width, 70vw);
+    @include setPropertyValueIfScreenSmallerThan(575px, margin, 80px auto);
+    @include setPropertyValueIfScreenSmallerThan(370px, width, 80vw);
+}
+
+.flw-location-details{
+    color: $dayTextColor;
+    cursor: pointer; 
+}
+
+.flw-trash-icon{
+    color: $dayDeleteIconColor; 
+    font-size: 22px;
+    margin-right: 7px;
+    cursor: pointer;
+    
+    @include setPropertyValueIfScreenSmallerThan(767px, font-size, 18px);
+    @include setPropertyValueIfScreenSmallerThan(575px, font-size, 22px);
+    @include setPropertyValueIfScreenSmallerThan(470px, font-size, 20px);
+    @include setPropertyValueIfScreenSmallerThan(400px, font-size, 18px);
+    @include setPropertyValueIfScreenSmallerThan(330px, font-size, 16px);
+}
+
+.flw-city, .flw-country-id{
+    padding-left:8px;
+    font-size: 30px;
+    
+    @include setPropertyValueIfScreenSmallerThan(767px, font-size, 22px);
+    @include setPropertyValueIfScreenSmallerThan(575px, font-size, 30px);
+    @include setPropertyValueIfScreenSmallerThan(470px, font-size, 24px);
+    @include setPropertyValueIfScreenSmallerThan(400px, font-size, 22px);
+    @include setPropertyValueIfScreenSmallerThan(330px, font-size, 18px);
+}
+
+.flw-country{
+    padding-left: 8px;
+    font-size: 18px;
+    
+    @include setPropertyValueIfScreenSmallerThan(767px, font-size, 16px);
+    @include setPropertyValueIfScreenSmallerThan(575px, font-size, 18px);
+    @include setPropertyValueIfScreenSmallerThan(470px, font-size, 16px);
+    @include setPropertyValueIfScreenSmallerThan(330px, font-size, 14px);
+}
+
+.flw-body{
+    min-height: 350px;
+    display: block;
+    position: relative;
+}
+
+.flw-weather-icon-container{
+    width: 120px;
+    margin: 40px auto 25px auto;
+}
+
+.flw-weather-data-container{ 
+    hr{
+        margin: 5px 10px !important;   
+        background: $dayHrColor;
+    }
+}
+
+.flw-data-description{
+    padding-left: 10px;
+    
+    @include setPropertyValueIfScreenSmallerThan(767px, font-size, 14px);
+}
+
+.flw-data-value{
+    padding-right: 10px;
+    
+    @include setPropertyValueIfScreenSmallerThan(767px, font-size, 14px);
+}
+
+.flw-ready-to-remove{
+    color: red !important;
+}
+
+.flw-update-time{
+    color: grey;
+    font-size: 11.4px;
+    padding-left: 8px;
+    padding-top: 4px;
+}
+
+.flw-fancy-text{
+    line-height: 1.2;
+    font-weight: 300;
+}
+
+.arrow{
+    /* for the ng-bootstrap tooltip functionality */
+    margin-left: 10px;
+}
+
+.tooltip-inner{
+    /* for the ng-bootstrap tooltip functionality */
+    padding: 0.2rem 0.5rem;
+    margin-left: 10px;
+}
+
+.flw-night-view{
+    background: linear-gradient($nightBackgroundLight, $nightBackgroundDark);
+    color: $nightTextColor;
+    
+    .flw-location-details{
+        color: $nightTextColor;
+    }
+    
+    .flw-trash-icon{
+        color: $nightDeleteIconColor; 
+    }
+    
+    hr{
+        background: $nightHrColor;
+    }
+    
+    .flw-update-time{
+        color: lightgrey;
+    }
+    
+    .arrow::before{
+        /* for the ng-bootstrap tooltip functionality */
+        border-right-color: white;
+    }
+    
+    .tooltip-inner{
+        /* for the ng-bootstrap tooltip functionality */
+        background: white;
+        color: black;
+        font-weight: 500;
+    }
+}

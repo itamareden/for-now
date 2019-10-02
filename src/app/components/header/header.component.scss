@@ -1,0 +1,83 @@
+@import 'mixins';
+@import "myColors";
+
+.app-title{
+    @include setPropertyValueIfScreenSmallerThan(360px, font-size, 17px);
+    @include setPropertyValueIfScreenSmallerThan(320px, font-size, 16px);
+    @include setPropertyValueIfScreenSmallerThan(300px, font-size, 15px);
+}
+
+.menu-icon{
+    font-size: 25px;
+    color: white;
+    padding: 0 8px;
+    cursor: pointer;
+}
+
+.settings-menu{
+    position: absolute; 
+    right: 7px; 
+    top: 46px; 
+    background: white;
+    z-index: 2;
+    
+    li{
+        text-align: center; 
+        
+        a{
+            display: block;
+            padding: $menuItemPadding;
+         }
+    }
+    
+    li:hover{
+        background: $menuHoverBackground;
+        color: white !important;
+        border-radius: 0;
+        
+        a{
+            color: white !important;  
+        }
+        
+        button{
+            background: $menuHoverBackground;
+            color: white; 
+        }
+    }
+    
+    li.list-group-item{
+        padding: 0;
+    }
+}
+
+.measurement-system{
+    min-width: 105px; 
+    padding: $menuItemPadding;
+    
+    button{
+        background: white;
+        display: inline-block;
+        padding: 0 7px;
+        border-width: 0;
+        cursor: pointer;
+        outline: none;
+    }
+    
+    .active-system{
+        color: dodgerblue !important;
+        font-weight: bold;
+        cursor: default;
+    }
+}
+
+.nav-to-home{
+    cursor: pointer;
+}
+
+.colored{
+    color: #007bff !important;
+}
+
+a{
+    text-decoration: none !important;
+}

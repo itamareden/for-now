@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <div class="container">
+        <div class="navbar-brand display-5 app-title">Itamar's Weather App</div>
+        <div class="collapse navbar-collapse" id="collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link nav-to-home" (click)="navigateToHomePage()">Home</a>
+                </li>
+                <li class="nav-item">
+                   <a href="" class="nav-link" routerLink="/favorites">Favorites</a>
+                </li>
+            </ul>
+        </div>
+        <div style="position: relative">
+           <div #iconContainer>
+               <fa-icon [icon]="menuIcon" class="menu-icon" 
+               (click)="isShowMenu ? isShowMenu = false : isShowMenu = true"></fa-icon>
+           </div>
+           <div *ngIf="isShowMenu" class="settings-menu">
+               <ul class="list-group">
+                   <li class="list-group-item d-xs-block d-sm-none">
+                       <a class="nav-to-home colored" (click)="navigateToHomePage()">Home</a>
+                   </li>
+                   <li class="list-group-item d-xs-block d-sm-none">
+                       <a href="" routerLink="/favorites">Favorites</a>
+                   </li>
+                   <li class="list-group-item">
+                       <div class="measurement-system" #ms> 
+                           <button [ngClass]="(measureSystem | async) == 'F' ? 'active-system' : null" (click)="updateMeasurementSystem('F')">F°</button>
+                           <span>|</span>
+                           <button [ngClass]="(measureSystem | async) == 'C' ? 'active-system' : null" (click)="updateMeasurementSystem('C')">C°</button>
+                       </div>
+                   </li>
+               </ul>
+           </div>
+            
+        </div>
+    </div>
+</nav>

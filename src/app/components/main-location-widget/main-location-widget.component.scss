@@ -1,0 +1,32 @@
+@import 'mixins';
+@import 'myColors';
+
+.main-location-container{
+    min-height: 300px;
+    margin-top: 100px;
+    position: relative;
+}
+
+.main-location-data{
+    border: 1px solid lightgrey;
+}
+
+.spinner-size{
+    width: 60px;
+    height: 60px;
+}
+
+li.list-inline-item{
+    width: 20%;    
+    padding: 5px 0;
+    
+    @include setPropertyValueIfScreenSmallerThan(767px, width, 100%);
+}
+
+.dynamic-border{
+    border-color: lightgrey;
+    border-style: solid;
+    border-width: 0 1px 0 0;
+    
+    @include setPropertyValueIfScreenSmallerThan(767px, border-width, 0 0 1px 0);
+}

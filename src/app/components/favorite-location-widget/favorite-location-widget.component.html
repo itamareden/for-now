@@ -1,0 +1,67 @@
+<div class="flw-container" [ngClass]="setViewBasedOnTimeOfDay()">
+    <div class="header clearfix">
+        <div class="flw-location-details float-left" (click)="navigateToLocationPage(location)">
+            <span class="display-4 flw-city">{{ location.city }},</span>
+            <span class="display-4" [ngClass]="location.country.length > 10 ? 'flw-country-id' : 'flw-country'">
+                {{ location.country.length > 10 ? location.countryID : location.country }}
+            </span>
+        </div>
+        <div class="float-right" (click)="removeLocation()" #trashContainer>
+            <fa-icon [icon]="trashIcon" class="flw-trash-icon" 
+            [ngClass]="isReadyToRemove ? 'flw-ready-to-remove' : null"></fa-icon>
+        </div>
+    </div>
+    <div [ngSwitch]="location.weatherDataState" class="flw-body">
+        <div *ngSwitchCase="'SUCCESS'">
+            <div class="flw-update-time">
+                <div>As of {{ location.currentWeather.generateDateTemplate()}}</div>
+                <div>({{location.currentWeather.calculateTimeSinceLastUpdate()}} ago)</div>
+            </div>
+            <div class="flw-weather-icon-container">
+                <img [src]="location.currentWeather.getWeatherImageSrc()" [alt]="location.currentWeather.description.text">
+            </div>
+            <div *ngIf="(measurementSystem | async) as ms" class="flw-weather-data-container">
+                <div class="clearfix">
+                    <span class="float-left flw-data-description">Temperature</span>
+                    <span class="float-right flw-data-value">
+                       {{ms === "C" ? location.currentWeather.temp.actual : location.currentWeather.celsiusToFahrenheit(location.currentWeather.temp.actual)}}°
+                    </span>
+                </div>
+                <hr>
+                <div class="clearfix">
+                    <span class="float-left flw-data-description">Feels Like</span>
+                    <span class="float-right flw-data-value">
+                       {{ms === "C" ? location.currentWeather.temp.feelsLike : location.currentWeather.celsiusToFahrenheit(location.currentWeather.temp.feelsLike)}}°
+                    </span>
+                </div>
+                <hr>
+                <div class="clearfix">
+                    <div class="float-left flw-data-description" placement="right" ngbTooltip="Humidity">
+                        <fa-icon [icon]="dropIcon" ></fa-icon>
+                    </div>
+                    <span class="float-right flw-data-value">{{location.currentWeather.humidity}}%</span> 
+                </div>
+                <hr>
+                <div class="clearfix">
+                    <div class="float-left flw-data-description" placement="right" ngbTooltip="Wind Speed">
+                        <fa-icon [icon]="windIcon" ></fa-icon>
+                    </div>
+                    <span class="float-right flw-data-value">
+                      <fa-icon [icon]="fanIcon" [spin]="location.currentWeather.wind.speed.value > 0 ? true : false" 
+                       [styles]="{'animation-duration': location.currentWeather.setWindSpeed()}"></fa-icon>
+                       {{ms === "C" ? location.currentWeather.setMetricValue(location.currentWeather.wind.speed) : location.currentWeather.convertMetricToImperial(location.currentWeather.wind.speed)}}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div *ngSwitchCase="'WAITING'">
+            <div class="spinner-border text-info center-absolute"></div>
+        </div>
+        <div *ngSwitchCase="'ERROR'">
+            <div class="text-danger p-3 pt-5">
+                <h3 class="flw-fancy-text">Oops...</h3>
+                <h5 class="flw-fancy-text">An error has occured, please try again later</h5>
+            </div>
+        </div>
+    </div>
+</div>

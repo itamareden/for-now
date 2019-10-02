@@ -1,0 +1,5 @@
+@mixin setPropertyValueIfScreenSmallerThan($screenWidth, $property, $propertyValue) {
+    @media (max-width: $screenWidth) {
+        #{$property}: $propertyValue;
+    };
+}

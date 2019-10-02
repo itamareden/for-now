@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="col-sm-1 col-md-2"></div>
+    <div class="col-sm-10 col-md-8">
+        <div class="input-group search-box-container">
+            <div class="input-group-prepend">
+                <span class="input-group-text text-box" id="inputGroup-sizing-default">Location</span>
+            </div>
+            <input type="text" class="form-control display-1 text-capitalize search-input" 
+            [placeholder]="tip" (focus)="onFocus()" #input>
+            <div *ngIf="enableResults" class="results-container" #resultsContainer>
+                <ul class="list-group list-unstyled" [ngClass]="isThinking ? 'spinner-container' : null">
+                    <li class="list-group-item" *ngFor="let location of searchResults; let i = index" [ngClass]="highlightedLocationIndex == i ? 'highlighted' : null" (click)="setLocation(location)">
+                        <div class="autocomplete-container">
+                            <ul class="list-inline location-font">
+                                <li class="list-inline-item">{{location.city}},</li>
+                                <li class="list-inline-item">{{location.regionID}},</li>
+                                <li class="list-inline-item">{{location.country}}</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                <div *ngIf="isThinking" class="center-absolute">
+                    <div class="spinner-border text-primary center-absolute"></div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="isError" class="error-msg">Oops... An error has occured: <br>{{errorMsg}}</div>
+        <div class="col-sm-1 col-md-2"></div>
+    </div>

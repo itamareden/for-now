@@ -1,0 +1,116 @@
+<!-- the condition inside the *ngIf will always be true. we use it to shorten: cw ...  -->
+<div class="cww-container" [ngClass]="setViewBasedOnTimeOfDay()" *ngIf="location.currentWeather as cw">
+    <div class="header">
+       <div class="clearfix">
+            <div class="cww-location-details float-left">
+                <span class="display-4 cww-city">{{ location.city }},</span>
+                <span class="display-4 cww-country">
+                    {{ location.country.length > 10 ? location.countryID : location.country }}
+                </span>
+            </div>
+            <div class="float-right">
+                <fa-icon [icon]="location.isFavorite ? heartIcon : openHeartIcon" class="cww-heart-icon" 
+                (click)="toggleFavorite()"></fa-icon>
+            </div>
+        </div>
+        <div class="cww-update-time">
+            <div>As of {{ cw.generateDateTemplate()}}</div>
+            <div>({{cw.calculateTimeSinceLastUpdate()}} ago)</div>
+        </div>
+    </div>
+    <div class="cww-body">
+        <div class="cww-main-data">
+            <div class="cww-weather-image-container d-block d-lg-inline-block">
+                <div class="cww-weather-image">
+                    <img [src]="cw.getWeatherImageSrc()" 
+                    [alt]="cw.description.text">
+                </div>
+            </div>
+            <div class="cww-temperature-container d-block d-lg-inline-block" placement="bottom" ngbTooltip="Actual / Feels Like">
+                <div>
+                    <span class="cww-actual-temperature">
+                        {{ms === "C" ? cw.temp.actual : cw.celsiusToFahrenheit(cw.temp.actual)}}° /
+                    </span>
+                    <span class="cww-feels-like-temperature">
+                        {{ms === "C" ? cw.temp.feelsLike : cw.celsiusToFahrenheit(cw.temp.feelsLike)}}°
+                    </span>
+                </div>
+            </div>
+            <div class="cww-times-main-container clearfix">
+                <div class="cww-times-container cww-sun-times-container d-block d-md-inline-block">
+                    <div class="cww-sun-icon">
+                        <fa-icon [icon]="sunIcon"></fa-icon>
+                    </div>
+                    <div class="cww-ellipse-container">
+                        <rise-set-times [times]="location.forecastWeather[0].sun" [colors]="setSunTimesColors()"></rise-set-times>
+                    </div>
+                </div>
+                <div class="cww-times-container cww-moon-times-container d-block d-md-inline-block">
+                    <div class="cww-moon-icon">
+                        <fa-icon [icon]="moonIcon"></fa-icon>
+                    </div>
+                    <div class="cww-ellipse-container">
+                        <rise-set-times [times]="getAppropriateMoonTimes()" [colors]="setMoonTimesColors()"></rise-set-times>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cww-weather-data-container mb-5">
+            <div class="cww-weather-data-set d-block d-md-inline-block">
+                <div class="clearfix">
+                    <div class="float-left cww-data-description" placement="right" ngbTooltip="Humidity">
+                        <fa-icon class="cww-fa-icon" [icon]="dropIcon"></fa-icon>
+                    </div>
+                    <div class="float-right cww-data-value">{{cw.humidity}}%</div>
+                </div>
+                <hr>
+                <div class="clearfix">
+                    <div class="float-left cww-data-description" placement="right" ngbTooltip="Wind Speed">
+                        <fa-icon class="cww-fa-icon" [icon]="windIcon"></fa-icon>
+                    </div>
+                    <span class="float-right cww-data-value">
+                        <fa-icon [icon]="fanIcon" [spin]="cw.wind.speed.value > 0 ? true : false" 
+                        [styles]="{'animation-duration': cw.setWindSpeed()}"></fa-icon>
+                        {{ms === "C" ? cw.setMetricValue(cw.wind.speed) : cw.convertMetricToImperial(cw.wind.speed)}}
+                    </span>
+                </div>
+                <hr>
+                <div class="clearfix">
+                    <div class="float-left cww-data-description" placement="right" ngbTooltip="Wind Direction">
+                        <fa-icon class="cww-fa-icon" [icon]="compassIcon"></fa-icon>
+                    </div>
+                    <div class="float-right cww-data-value">
+                        <fa-icon class="cww-wind-direction" [icon]="arrowIcon" [transform]="setDirectionAngle()"></fa-icon>
+                    </div>
+                </div>
+                <hr class="d-block d-md-none">
+            </div>
+            <div class="cww-weather-data-set d-block d-md-inline-block">
+               <div class="clearfix">
+                    <div class="float-left cww-data-description" placement="right" ngbTooltip="UV">
+                        <fa-icon class="cww-fa-icon" [icon]="sunIcon"></fa-icon>
+                    </div>
+                    <span class="float-right cww-data-value">
+                        {{ cw.uv.index }} ({{ cw.uv.text }})
+                    </span>
+                </div>
+                <hr> 
+               <div class="clearfix">
+                    <div class="float-left cww-data-description" placement="right" ngbTooltip="Clouds Cover">
+                        <fa-icon class="cww-fa-icon" [icon]="cloudIcon"></fa-icon>
+                    </div>
+                    <span class="float-right cww-data-value">{{cw.cloudsCover}}%</span>
+                </div>
+                <hr>
+                <div class="clearfix">
+                    <div class="float-left cww-data-description" placement="right" ngbTooltip="Visibility">
+                        <fa-icon class="cww-fa-icon" [icon]="binocularsIcon"></fa-icon>
+                    </div>
+                    <div class="float-right cww-data-value">
+                        {{ms === "C" ? cw.setMetricValue(cw.visibility) : cw.convertMetricToImperial(cw.visibility, ms)}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
