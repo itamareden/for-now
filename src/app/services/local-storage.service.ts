@@ -82,6 +82,10 @@ export class LocalStorageService {
     }
     
     isLocationHome(location: Location): boolean{
-        return this.getHomeLocation().key === location.details.key;
+        const homeLocationDetails = this.getHomeLocation();
+        if(homeLocationDetails === null){
+            return false;
+        }
+        return homeLocationDetails.key === location.details.key;
     }
 }

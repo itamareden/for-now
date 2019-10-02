@@ -8,7 +8,6 @@ import { EWeatherDataState } from "../../enums/eweather-data-state.enum";
 export function locationReducers(state = initialLocationsState, action: LocationActions){   
     switch(action.type){
         case ELocationActions.getSelectedLocationSuccess:{
-            console.log("OK 5")
             return {
                 ...state,
                 selectedLocation: action.payload,
