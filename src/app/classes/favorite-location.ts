@@ -1,9 +1,10 @@
 import { Location } from "./location";
+import { ILocationDetails } from "../interfaces/ilocation-details";
 
 export class FavoriteLocation extends Location{
     
-    constructor(city: string, region: string, country: string, countryID: string, key: string){
-        super(city, region, country, countryID, key);
+    constructor(details: ILocationDetails){
+        super(details);
         this.isFavorite = true;
     }
     

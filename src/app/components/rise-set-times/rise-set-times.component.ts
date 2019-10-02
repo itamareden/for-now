@@ -13,11 +13,11 @@ export class RiseSetTimesComponent implements OnInit, OnDestroy {
        of radius-x and radius-y, the 2 radiuses of the ellipse. 
        the formula for the radiuses is:
        radius-x = (width of parent element - 40) / 2
-       radius-y = height of parent element - 30
+       radius-y = height of parent element - 35
    */
     
     @Input() times: {rise: string, set: string};
-    @Input() colors: {area: string, line: string, text: string};   
+    @Input() colors: {orbit: string, line: string, text: string} = {orbit: '#fff007', line: 'black', text: 'black'};
     @ViewChild('container') container: ElementRef;
     
     riseCoordinates: [number, number];
@@ -27,13 +27,15 @@ export class RiseSetTimesComponent implements OnInit, OnDestroy {
     radiusX: number;
     radiusY: number;
     readonly horizontalMargins = 20;
-    readonly verticalMargins = 5;
+    readonly topMargins = 12;
+    readonly bottomMargins = 3;
     readonly textHeight = 20;
     ellipsePath: string;
     underlinePath: string;
     arcPath: string;
     isReady = false;
     animationFinished = false;
+    setOccured = false;
     orbitSubscription: Subscription;
     
     constructor() { }
@@ -48,14 +50,12 @@ export class RiseSetTimesComponent implements OnInit, OnDestroy {
     }
     
     buildView(){
-        // initialize default colors if not provided 
-        this.initializeColors();
         // extract component's measurements
         const totalWidth = this.container.nativeElement.offsetWidth;
         const totalHeight = this.container.nativeElement.offsetHeight;
         // initialize radiuses based on component's measurements and view's constraints
         this.radiusX = (totalWidth - 2 * this.horizontalMargins) / 2;
-        this.radiusY = totalHeight - 2 * this.verticalMargins - this.textHeight;
+        this.radiusY = totalHeight - this.topMargins - this.bottomMargins - this.textHeight;
         // initialize points coordinates for: rise time, set time, underline's center and  arc start on ellipse
         this.initializePointsCoordinates();
         // initialize paths for ellipse and the underline
@@ -67,7 +67,7 @@ export class RiseSetTimesComponent implements OnInit, OnDestroy {
     
     initializePointsCoordinates(){
         // equal for all points: rise center and set
-        const yValue = this.verticalMargins + this.radiusY;
+        const yValue = this.topMargins + this.radiusY;
         this.riseCoordinates = [this.horizontalMargins, yValue];
         this.setCoordinates = [this.horizontalMargins + 2 * this.radiusX, yValue];
         // it's in the middle so the average of rise and set
@@ -96,9 +96,11 @@ export class RiseSetTimesComponent implements OnInit, OnDestroy {
         return false;
     }
     
-    /* calculates the coordinates of the point from which the arc starts. the arc is the filled area
-       which describes the part of the rise - set interval already elapsed. the arc starts from this 
-       point (whose coordinates are returned from this function) and ends at riseCoordinates.
+    /* calculates the coordinates of the point from which the arc starts. this point is also the point of the
+       big circle which depicts the star (i.e sun or moon). 
+       the arc is the non-dashed line which describes the part of the rise - set interval already elapsed. 
+       the arc starts from this point (whose coordinates are returned from this function) and ends at 
+       riseCoordinates.
        this function has 1 parameter: elapsedRatio. it's value is between 0 and 1 => 0 means we're before
        or at sunrise and 1 means we're after or at sunset */
     calculateArcStartCoordinates(elapsedRatio: number): [number, number]{
@@ -113,8 +115,7 @@ export class RiseSetTimesComponent implements OnInit, OnDestroy {
     }
     
     /* the structure is: 
-       M(starting point x,y) => in our case it's the center of the underline
-       L(point from which the arc starts x,y) => the L draws a line from the starting point to where the arc starts
+       M(starting point x,y) => in our case it's the start of the arc
        A(radius x, radius y , 0 0 0, end point x,y) => draw the arc based on the radius and the end point, which in 
        our case is the rise point */
     generateArcPath(elapsedRatio: number): string{
@@ -125,15 +126,10 @@ export class RiseSetTimesComponent implements OnInit, OnDestroy {
         else{
             let path: string;
             this.arcStartCoordinates = this.calculateArcStartCoordinates(elapsedRatio);
+            path = `M${this.arcStartCoordinates.toString()} A${this.radiusX} ${this.radiusY} 0 0 0 ${this.riseCoordinates.toString()}`
             if(elapsedRatio === 1){
-                /* sun/moon set has passed so we use this path which omits the dark line starting from 
-                   the center of the underline */
-                path = `M${this.setCoordinates.toString()} A${this.radiusX} ${this.radiusY} 0 0 0 ${this.riseCoordinates.toString()}`
-            }
-            else{
-                /* include the dark line which start from the center of the underline and stretches till 
-                   the start of the arc on the ellipse */
-                path = `M${this.centerCoordinates.toString()} L${this.arcStartCoordinates.toString()} A${this.radiusX} ${this.radiusY} 0 0 0 ${this.riseCoordinates.toString()}`
+                /* sunset/moonset occured. we use this flag in the template to show/hide the big circle */
+                this.setOccured = true;
             }
             return path;
         }
@@ -153,6 +149,25 @@ export class RiseSetTimesComponent implements OnInit, OnDestroy {
         return `${hours}:${minutes}`;
     }
     
+    /* set the size of the "star" (i.e. the big circle), based on the measurements of the ellipse (i.e. the radiuses) */
+    setStarSize(): string{
+        if(this.radiusX >= 100 && this.radiusY >= 100){
+            return "12";
+        }
+        else if(this.radiusX >= 80 && this.radiusY >= 80){
+            return "10";
+        }
+        else if(this.radiusX >= 60 && this.radiusY >= 60){
+            return "8";
+        }
+        else if(this.radiusX >= 40 && this.radiusY >= 40){
+            return "6";
+        }
+        else{
+            return "4";
+        }
+    }
+    
     animateOrbitProgress(){
         const stopValue = this.getElapsedTimeRatio();
         this.orbitSubscription = interval(50)
@@ -167,12 +182,6 @@ export class RiseSetTimesComponent implements OnInit, OnDestroy {
                     this.animationFinished = true;
                 }
             );
-    }
-    
-    initializeColors(){
-        this.colors.area = this.colors.area ? this.colors.area : '#fff007a8';
-        this.colors.line = this.colors.line ? this.colors.line : 'black';
-        this.colors.text = this.colors.text ? this.colors.text : 'black';
     }
     
     ngOnDestroy(){

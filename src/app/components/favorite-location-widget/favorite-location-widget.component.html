@@ -1,9 +1,9 @@
 <div class="flw-container" [ngClass]="setViewBasedOnTimeOfDay()">
     <div class="header clearfix">
         <div class="flw-location-details float-left" (click)="navigateToLocationPage(location)">
-            <span class="display-4 flw-city">{{ location.city }},</span>
-            <span class="display-4" [ngClass]="location.country.length > 10 ? 'flw-country-id' : 'flw-country'">
-                {{ location.country.length > 10 ? location.countryID : location.country }}
+            <span class="display-4 flw-city">{{ location.details.city }},</span>
+            <span class="display-4" [ngClass]="location.details.country.length > 10 ? 'flw-country-id' : 'flw-country'">
+                {{ location.details.country.length > 10 ? location.details.countryID : location.details.country }}
             </span>
         </div>
         <div class="float-right" (click)="removeLocation()" #trashContainer>

@@ -1,17 +1,18 @@
 import { Action } from "@ngrx/store";
 
 export enum EConfigActions{
-    getMeasurementSystem = "[Measurement System] Get Measurement System",
-    getMeasurementSystemSuccess = "[Measurement System] Get Measurement System Success",
+    getMeasurementSystemOnLoad = "[Measurement System] Get Measurement System On Load",
+    getMeasurementSystemOnLoadSuccess = "[Measurement System] Get Measurement System On Load Success",
     updateMeasurementSystem = "[Measurement System] Update Measurement System",
+    updateMeasurementSystemSuccess = "[Measurement System] Update Measurement System Success",
 }
     
-export class GetMeasurementSystem implements Action{
-    public readonly type = EConfigActions.getMeasurementSystem;
+export class GetMeasurementSystemOnLoad implements Action{
+    public readonly type = EConfigActions.getMeasurementSystemOnLoad;
 }
     
-export class GetMeasurementSystemSuccess implements Action{
-    public readonly type = EConfigActions.getMeasurementSystemSuccess;
+export class GetMeasurementSystemOnLoadSuccess implements Action{
+    public readonly type = EConfigActions.getMeasurementSystemOnLoadSuccess;
     constructor(public payload: string){}
 }
     
@@ -20,4 +21,12 @@ export class UpdateMeasurementSystem implements Action{
     constructor(public payload: string){}
 }
     
-export type ConfigActions = GetMeasurementSystem | GetMeasurementSystemSuccess | UpdateMeasurementSystem;
+export class UpdateMeasurementSystemSuccess implements Action{
+    public readonly type = EConfigActions.updateMeasurementSystemSuccess;
+    constructor(public payload: string){}
+}
+    
+export type ConfigActions = GetMeasurementSystemOnLoad | 
+                            GetMeasurementSystemOnLoadSuccess | 
+                            UpdateMeasurementSystem | 
+                            UpdateMeasurementSystemSuccess;

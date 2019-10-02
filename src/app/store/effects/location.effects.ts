@@ -8,6 +8,7 @@ import { switchMap, map, mergeMap, catchError } from 'rxjs/operators';
 import { WeatherDataService } from '../../services/weather-data.service';  
 import { FavoriteLocation } from '../../classes/favorite-location';
 import { MainLocation } from '../../classes/main-location';
+import { ILocationDetails } from '../../interfaces/ilocation-details';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { IAppState } from '../state/app.state';
 import { LocationActions,
@@ -27,6 +28,10 @@ import { LocationActions,
          RemoveFavoriteLocation,
          RemoveFavoriteLocationSuccess,
          AddOrRemoveFavoriteLocationError,
+         GetHomeLocationOnLoad,
+         GetHomeLocationOnLoadSuccess,
+         UpdateHomeLocation,
+         UpdateHomeLocationSuccess,
        } from '../actions/location.actions';
 
 
@@ -45,12 +50,19 @@ export class LocationEffects {
         map(action => action.payload),
         switchMap(loc => {
             // all selected locations are of type MainLocation
-            const mainLocation = new MainLocation(loc.city, loc.regionID, loc.country, loc.countryID, loc.key);
+            const mainLocation = new MainLocation(loc.details);
             // if the location is favorite then mark it as so in the object
             if(this.storageSrvc.isLocationFavorite(mainLocation)){
                 mainLocation.isFavorite = true;
             }
-            this.router.navigate(['/location/', `${loc.countryID}`, `${loc.regionID}`, loc.city.split(" ").join("_")]);
+            // if the location is the home location then mark it as so in the object
+            if(this.storageSrvc.isLocationHome(mainLocation)){
+                mainLocation.isHomeLocation = true;
+            }
+            this.router.navigate(['/location/', 
+                                  `${loc.details.countryID}`, 
+                                  `${loc.details.regionID}`, 
+                                  loc.details.city.split(" ").join("_")]);
             return of(new GetSelectedLocationSuccess(mainLocation));
         })
     )
@@ -124,6 +136,25 @@ export class LocationEffects {
                 const favoritesArr = this.storageSrvc.getAllFavoriteLocations();
                 return of(new AddOrRemoveFavoriteLocationError(favoritesArr));
             }
+        })
+    )
+    
+    @Effect() 
+    getHomeLocationOnLoad$ = this.actions.pipe(
+        ofType<GetHomeLocationOnLoad>(ELocationActions.getHomeLocationOnLoad),
+        switchMap(() => {
+            const homeLocationDetails = this.storageSrvc.getHomeLocation();
+            return of(new GetHomeLocationOnLoadSuccess(homeLocationDetails));
+        })
+    )
+    
+    @Effect() 
+    updateHomeLocation$ = this.actions.pipe(
+        ofType<UpdateHomeLocation>(ELocationActions.updateHomeLocation),
+        map(action => action.payload),
+        switchMap((locationDetails: ILocationDetails) => {
+            this.storageSrvc.setHomeLocation(locationDetails);
+            return of(new UpdateHomeLocationSuccess(locationDetails));
         })
     )
     

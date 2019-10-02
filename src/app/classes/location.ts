@@ -1,22 +1,16 @@
+import { ILocationDetails } from "../interfaces/ilocation-details";
 import { EWeatherDataState } from "../enums/eweather-data-state.enum";
 import { CurrentWeather } from "./current-weather";
 
 export class Location {
-    readonly city: string;
-    readonly regionID: string;
-    readonly country: string;
-    readonly countryID: string;
-    readonly key: string;
-    isFavorite: boolean; 
+    details: ILocationDetails;
     weatherDataState: EWeatherDataState; 
     currentWeather: CurrentWeather;
+    isFavorite = false; 
+    isHomeLocation = false;
     
-    constructor(city: string, regionID: string, country: string, countryID: string, key: string){
-        this.city = city;
-        this.regionID = regionID;
-        this.country = country;
-        this.countryID = countryID;
-        this.key = key;
+    constructor(details: ILocationDetails){
+        this.details = details;
         this.weatherDataState = EWeatherDataState.waiting;
     }
     

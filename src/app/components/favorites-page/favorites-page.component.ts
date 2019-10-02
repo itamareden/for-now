@@ -47,19 +47,23 @@ export class FavoritesPageComponent implements OnInit, OnDestroy {
         let newFavoriteLocation: FavoriteLocation;
         switch(locationName){
             case 'Honolulu': {
-                newFavoriteLocation = new FavoriteLocation("Honolulu", "HI", "United States", "US", "348211");
+                const details = {city: "Honolulu", regionID: "HI", country: "United States", countryID: "US", key: "348211"};
+                newFavoriteLocation = new FavoriteLocation(details);
                 break;
             }
             case 'Tokyo': {
-                newFavoriteLocation = new FavoriteLocation("Tokyo", "13", "Japan", "JP", "226396");
+                const details = {city: "Tokyo", regionID: "13", country: "Japan", countryID: "JP", key: "226396"};
+                newFavoriteLocation = new FavoriteLocation(details);
                 break;
             }
             case 'New York': {
-                newFavoriteLocation = new FavoriteLocation("New York", "NY", "United States", "US", "349727");
+                const details = {city: "New York", regionID: "NY", country: "United States", countryID: "US", key: "349727"};
+                newFavoriteLocation = new FavoriteLocation(details);
                 break;
             }
             case 'Amsterdam': {
-                newFavoriteLocation = new FavoriteLocation("Amsterdam", "NH", "Netherlands", "NL", "249758");
+                const details = {city: "Amsterdam", regionID: "NH", country: "Netherlands", countryID: "NL", key: "249758"};
+                newFavoriteLocation = new FavoriteLocation(details);
                 break;
             }
         }

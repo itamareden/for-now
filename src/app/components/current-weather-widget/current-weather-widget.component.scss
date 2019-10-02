@@ -26,7 +26,21 @@
 .cww-heart-icon{
     color: red; 
     font-size: 30px;
-    margin-right: 7px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.cww-home-icon{
+    color: $dayTextColor; 
+    font-size: 30px;
+    margin-right: 10px;
+}
+
+.cww-thumbtack-icon{
+    color: $dayTextColor; 
+    font-size: 30px;
+    margin-right: 10px;
+    padding-left: 10px;
     cursor: pointer;
 }
 
@@ -115,11 +129,11 @@
 .cww-ellipse-container{
     /* the value of height here determines the value of the radius-y in rise-set-times component */
     width: 100%;
-    height: 130px;
+    height: 135px;
     
-    @include setPropertyValueIfScreenSmallerThan(1199px, height, 110px);
-    @include setPropertyValueIfScreenSmallerThan(400px, height, 90px);
-    @include setPropertyValueIfScreenSmallerThan(320px, height, 70px);
+    @include setPropertyValueIfScreenSmallerThan(1199px, height, 115px);
+    @include setPropertyValueIfScreenSmallerThan(400px, height, 95px);
+    @include setPropertyValueIfScreenSmallerThan(320px, height, 75px);
 }
 
 .cww-sun-icon{
@@ -189,7 +203,7 @@
         color: dodgerblue; 
     }
     
-    .cww-moon-icon{
+    .cww-moon-icon, .cww-thumbtack-icon, .cww-home-icon{
         color: white;
     }
     
@@ -205,9 +219,19 @@
         color: lightgrey;
     }
     
-    .arrow::before{
+    .cww-weather-data-container .arrow::before{
         /* for the ng-bootstrap tooltip functionality */
         border-right-color: white;
+    }
+    
+    .cww-main-data .arrow::before{
+        /* for the ng-bootstrap tooltip functionality */
+        border-bottom-color: white;
+    }
+    
+    .cww-header .arrow::before{
+        /* for the ng-bootstrap tooltip functionality */
+        border-left-color: white;
     }
     
     .tooltip-inner{

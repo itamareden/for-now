@@ -26,7 +26,14 @@ export class LocationAutocompleteService {
         const locationsArr: Location[] = [];
         if(locationsResponse !== null){
             locationsResponse.forEach(locationObj => {
-                const location = new Location(locationObj.LocalizedName, locationObj.AdministrativeArea.ID, locationObj.Country.LocalizedName, locationObj.Country.ID, locationObj.Key);
+                const details = {
+                    city: locationObj.LocalizedName, 
+                    regionID: locationObj.AdministrativeArea.ID, 
+                    country: locationObj.Country.LocalizedName, 
+                    countryID: locationObj.Country.ID, 
+                    key: locationObj.Key
+                };
+                const location = new Location(details);
                 locationsArr.push(location);
             });
             return locationsArr;

@@ -2,6 +2,7 @@ import { Action } from '@ngrx/store';
 import { Location } from '../../classes/location';
 import { MainLocation } from '../../classes/main-location';
 import { FavoriteLocation } from '../../classes/favorite-location';
+import { ILocationDetails } from '../../interfaces/ilocation-details';
 
 export enum ELocationActions{
     getSelectedLocation = '[Location] Get Selected Location',
@@ -19,6 +20,10 @@ export enum ELocationActions{
     removeFavoriteLocation = '[Location] Remove Favorite Location',
     removeFavoriteLocationSuccess = '[Location] Remove Favorite Location Success',
     addOrRemoveFavoriteLocationError = '[Location] Add Or Remove Favorite Location Error',
+    getHomeLocationOnLoad = '[Location] Get Home Location On Load',
+    getHomeLocationOnLoadSuccess = '[Location] Get Home Location On Load Success',
+    updateHomeLocation = '[Location] Update Home Location',
+    updateHomeLocationSuccess = '[Location] Update Home Location Success',
 }
 
 export class GetSelectedLocation implements Action{
@@ -93,6 +98,25 @@ export class AddOrRemoveFavoriteLocationError implements Action{
     constructor(public payload: FavoriteLocation[]){}
 }
     
+export class GetHomeLocationOnLoad implements Action{
+    public readonly type = ELocationActions.getHomeLocationOnLoad;
+}
+    
+export class GetHomeLocationOnLoadSuccess implements Action{
+    public readonly type = ELocationActions.getHomeLocationOnLoadSuccess;
+    constructor(public payload: ILocationDetails){}
+}
+    
+export class UpdateHomeLocation implements Action{
+    public readonly type = ELocationActions.updateHomeLocation;
+    constructor(public payload: ILocationDetails){}
+}
+    
+export class UpdateHomeLocationSuccess implements Action{
+    public readonly type = ELocationActions.updateHomeLocationSuccess;
+    constructor(public payload: ILocationDetails){}
+}
+    
 export type LocationActions = GetSelectedLocation | 
                               GetSelectedLocationSuccess |
                               GetSelectedLocationData |
@@ -106,5 +130,9 @@ export type LocationActions = GetSelectedLocation |
                               AddFavoriteLocation |
                               AddFavoriteLocationSuccess |
                               RemoveFavoriteLocation |
-                              RemoveFavoriteLocationSuccess|
-                              AddOrRemoveFavoriteLocationError;
+                              RemoveFavoriteLocationSuccess |
+                              AddOrRemoveFavoriteLocationError |
+                              GetHomeLocationOnLoadSuccess | 
+                              GetHomeLocationOnLoad | 
+                              UpdateHomeLocation |
+                              UpdateHomeLocationSuccess;

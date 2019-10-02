@@ -1,12 +1,15 @@
 import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
 
+import { Subscription } from 'rxjs';   
 import { shareReplay } from 'rxjs/operators';   
 import { Store, select } from '@ngrx/store';
 import { IAppState } from "../../store/state/app.state";
 import { selectMeasurementSystem } from "../../store/selectors/config.selectors"; 
-import { GetMeasurementSystem, UpdateMeasurementSystem } from "../../store/actions/config.actions";
+import { selectHomeLocation } from "../../store/selectors/location.selectors"; 
+import { UpdateMeasurementSystem } from "../../store/actions/config.actions";
 import { GetSelectedLocation } from "../../store/actions/location.actions";
 import { MainLocation } from '../../classes/main-location';   
+import { ILocationDetails } from '../../interfaces/ilocation-details';   
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -21,13 +24,19 @@ export class HeaderComponent implements OnInit {
      
     // since in the template we have 2 async pipes, we share the data in 1 subscription...
     measureSystem = this.store.pipe(select(selectMeasurementSystem), shareReplay(1));
+    homeLocationSubscription: Subscription;
+    homeLocationDetails: ILocationDetails;
     isShowMenu = false;
     menuIcon = faBars;
   
     constructor(private store: Store<IAppState>) { }
 
     ngOnInit() {
-        this.store.dispatch(new GetMeasurementSystem());
+        this.homeLocationSubscription = this.store.pipe(select(selectHomeLocation))
+            .subscribe(
+                homeLocationDetails => this.homeLocationDetails = homeLocationDetails,
+                e => console.log(e),
+            )
     }
     
     updateMeasurementSystem(newSystem: string){
@@ -35,8 +44,8 @@ export class HeaderComponent implements OnInit {
     }
     
     navigateToHomePage(){
-        const defaultLocation = new MainLocation("Tel Aviv", "TA", "Israel", "IL", "215854");
-        this.store.dispatch(new GetSelectedLocation(defaultLocation));
+        const homeLocation = new MainLocation(this.homeLocationDetails);
+        this.store.dispatch(new GetSelectedLocation(homeLocation));
     }
     
     

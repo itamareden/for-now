@@ -2,9 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, Observable } from "rxjs"; 
 
 import { MainLocation } from "../../classes/main-location";
+import { ILocationDetails } from "../../interfaces/ilocation-details";
 import { Store, select } from '@ngrx/store';
 import { IAppState } from "../../store/state/app.state";
-import { selectSelectedLocation } from "../../store/selectors/location.selectors";
+import { selectSelectedLocation, selectHomeLocation } from "../../store/selectors/location.selectors";
 import { selectMeasurementSystem } from "../../store/selectors/config.selectors";
 import { GetSelectedLocation, 
          GetSelectedLocationData,
@@ -21,7 +22,9 @@ import { GetSelectedLocation,
 export class MainLocationWidgetComponent implements OnInit, OnDestroy {
 
 
+    homeLocationSubscription: Subscription;
     selectedLocationSubscription: Subscription;
+    homeLocationDetails: ILocationDetails;
     location: MainLocation;
     measurementSystem: Observable<string>;
     
@@ -29,14 +32,19 @@ export class MainLocationWidgetComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.measurementSystem = this.store.pipe(select(selectMeasurementSystem));
+        this.homeLocationSubscription = this.store.pipe(select(selectHomeLocation))
+            .subscribe(
+                // update the homeLocationDetails property each time the visitor changes his home Location
+                homeLocationDetails => this.homeLocationDetails = homeLocationDetails,
+                e => console.log(e),
+            )
         this.selectedLocationSubscription = this.store.pipe(select(selectSelectedLocation))
             .subscribe(
                 (location: MainLocation) => {
                     if(location === null){
-                        // create a MainLocation object for default location
-                        const defaultLocation = new MainLocation("Tel Aviv", "TA", "Israel", "IL", "215854");
-                        // initiate the selectedLocation of the state with the default location
-                        this.store.dispatch(new GetSelectedLocation(defaultLocation));
+                        // create a MainLocation object for home location
+                        const homeLocation = new MainLocation(this.homeLocationDetails);
+                        this.store.dispatch(new GetSelectedLocation(homeLocation));
                     }
                     else{
                         this.location = location;
@@ -52,6 +60,7 @@ export class MainLocationWidgetComponent implements OnInit, OnDestroy {
     }
     
     ngOnDestroy(){
+        this.homeLocationSubscription.unsubscribe()
         this.selectedLocationSubscription.unsubscribe();
     }
 

@@ -7,3 +7,4 @@ const locations = (state: IAppState) => state.locations;
 
 export const selectSelectedLocation = createSelector(locations, (state: ILocationState) => state.selectedLocation);
 export const selectFavoriteLocations = createSelector(locations, (state: ILocationState) => state.favoriteLocations);
+export const selectHomeLocation = createSelector(locations, (state: ILocationState) => state.homeLocation);

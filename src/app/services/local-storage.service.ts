@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { FavoriteLocation } from '../classes/favorite-location';
 import { Location } from '../classes/location';
+import { ILocationDetails } from '../interfaces/ilocation-details';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ export class LocalStorageService {
     
     favoritesStorageKey = "favoriteLocations";
     measurementSystemStorageKey = "measurementSystem";
+    homeLocationStorageKey = "homeLocation";
 
     constructor() { }
     
@@ -19,8 +21,9 @@ export class LocalStorageService {
         if(jsonFavoritesArr !== null){
             /* since the locations were "jsoned" and lost thier methods, we should use them to 
             create proper FavoriteLocation objects */
-            const favoriteLocationsArr = jsonFavoritesArr.map(locationAsJson => {
-                return new FavoriteLocation(locationAsJson.city, locationAsJson.regionID, locationAsJson.country, locationAsJson.countryID, locationAsJson.key);
+            const favoriteLocationsArr = jsonFavoritesArr.map(
+                (locAsJson: {details: {city:string, regionID:string, country:string, countryID:string, key:string}}) => {
+                return new FavoriteLocation(locAsJson.details);
             });
             return favoriteLocationsArr;
         }
@@ -29,7 +32,7 @@ export class LocalStorageService {
     
     addLocationToFavorites(loc: Location): FavoriteLocation{
         // we set location to type Location since it can be either MainLocation or FavoriteLocation
-        const newFavoriteLocation = new FavoriteLocation(loc.city, loc.regionID, loc.country, loc.countryID, loc.key);
+        const newFavoriteLocation = new FavoriteLocation(loc.details);
         const oldFavoritesArr = this.getAllFavoriteLocations() || []; 
         // check that the location doesn't already exist... 
         if(this.getLocationIndexInFavoritesArr(loc, oldFavoritesArr) === -1){
@@ -53,18 +56,32 @@ export class LocalStorageService {
     }
     
     isLocationFavorite(location: Location): boolean{
-        return this.getAllFavoriteLocations().filter(favoriteLoc => favoriteLoc.key === location.key).length === 1;
+        return this.getAllFavoriteLocations()
+            .filter(favoriteLoc => favoriteLoc.details.key === location.details.key).length === 1;
     }
     
     private getLocationIndexInFavoritesArr(location: Location, favoritesArr): number{
-        return favoritesArr.findIndex(favoriteLocationObj => favoriteLocationObj.key === location.key);
+        return favoritesArr.findIndex(favoriteLocationObj => favoriteLocationObj.details.key === location.details.key);
     }
     
-    public getMeasurementSystem(): string{
+    getMeasurementSystem(): string{
         return localStorage.getItem(this.measurementSystemStorageKey);
     }
     
-    public setMeasurementSystem(newValue: string){
+    setMeasurementSystem(newValue: string){
         localStorage.setItem(this.measurementSystemStorageKey, newValue);
+    }
+    
+    getHomeLocation(): ILocationDetails{
+        return JSON.parse(localStorage.getItem(this.homeLocationStorageKey));
+    }
+    
+    setHomeLocation(newHomeLocation: ILocationDetails){
+        const detailsJson = JSON.stringify(newHomeLocation);
+        localStorage.setItem(this.homeLocationStorageKey, detailsJson);
+    }
+    
+    isLocationHome(location: Location): boolean{
+        return this.getHomeLocation().key === location.details.key;
     }
 }

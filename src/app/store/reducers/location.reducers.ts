@@ -2,6 +2,7 @@ import { ELocationActions } from "../actions/location.actions";
 import { LocationActions } from "../actions/location.actions";
 import { initialLocationsState } from "../state/location.state";
 import { FavoriteLocation } from "../../classes/favorite-location";
+import { MainLocation } from "../../classes/main-location";
 import { EWeatherDataState } from "../../enums/eweather-data-state.enum";
 
 export function locationReducers(state = initialLocationsState, action: LocationActions){   
@@ -34,12 +35,12 @@ export function locationReducers(state = initialLocationsState, action: Location
         case ELocationActions.getFavoriteLocationDataSuccess:{
             /* the purpose of this action is to update the favorite object, which should already exist in the 
                array, with updated weather data */
-            const favoritejWithWeatherData = action.payload;
+            const favoriteWithData = action.payload;
             const favoritesArr = state.favoriteLocations;
-            const itemIndexInArr = favoritesArr.findIndex(location => location.key === favoritejWithWeatherData.key);
+            const itemIndexInArr = favoritesArr.findIndex(location => location.details.key === favoriteWithData.details.key);
             if(itemIndexInArr > -1){
-                favoritejWithWeatherData.weatherDataState = EWeatherDataState.success;
-                favoritesArr[itemIndexInArr] = favoritejWithWeatherData;
+                favoriteWithData.weatherDataState = EWeatherDataState.success;
+                favoritesArr[itemIndexInArr] = favoriteWithData;
             }
             return {
                 ...state,
@@ -50,7 +51,7 @@ export function locationReducers(state = initialLocationsState, action: Location
             // find the location object in the favorites array and update the state property in the object to error
             const keyOfErrorLocation = action.payload;
             const favoritesArr = state.favoriteLocations;
-            const locationWithError = favoritesArr.find(location => location.key === keyOfErrorLocation);
+            const locationWithError = favoritesArr.find(location => location.details.key === keyOfErrorLocation);
             if(!!locationWithError){
                 locationWithError.weatherDataState = EWeatherDataState.error;
             }
@@ -62,7 +63,7 @@ export function locationReducers(state = initialLocationsState, action: Location
         case ELocationActions.removeFavoriteLocationSuccess:{
             const itemToRemove = action.payload;
             const oldFavoritesArr = state.favoriteLocations ? state.favoriteLocations : [];
-            const itemIndexInArr = oldFavoritesArr.findIndex(location => location.key === itemToRemove.key);
+            const itemIndexInArr = oldFavoritesArr.findIndex(location => location.details.key === itemToRemove.details.key);
             if(itemIndexInArr > -1){
                 // remove the location from the array...
                 oldFavoritesArr.splice(itemIndexInArr, 1);
@@ -90,9 +91,11 @@ export function locationReducers(state = initialLocationsState, action: Location
                     /* check if this location already exist in the state. if it is we prefer the one from the state 
                        which contains weather data in it (in case the action came from a remove-location click in 
                        the favorites page) */
-                    const locationWithWeatherData = oldFavoritesArr.find(locationOld => locationOld.key === locationNew.key);
-                    if(locationWithWeatherData !== null){
-                        return locationWithWeatherData;
+                    const locationWithData = oldFavoritesArr.find(
+                        locationOld => locationOld.details.key === locationNew.details.key
+                    );
+                    if(locationWithData !== null){
+                        return locationWithData;
                     }
                     // if it's not in the state we'll use the one from localStorage
                     return locationNew;
@@ -100,6 +103,20 @@ export function locationReducers(state = initialLocationsState, action: Location
             return {
                 ...state,
                 favoriteLocations: updatedFavoritesArr,
+            }
+        }
+        case ELocationActions.getHomeLocationOnLoadSuccess:{
+            /* payload can be null (default location) if the visitor hasn't made any changes */
+            const homeLocationDetails = action.payload || state.homeLocation;
+            return {
+                ...state,
+                homeLocation: homeLocationDetails,
+            }
+        }
+        case ELocationActions.updateHomeLocationSuccess:{
+            return {
+                ...state,
+                homeLocation: action.payload,
             }
         }
         default: 

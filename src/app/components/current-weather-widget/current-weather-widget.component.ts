@@ -2,9 +2,9 @@ import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 
 import { Store } from '@ngrx/store';
 import { IAppState } from "../../store/state/app.state";
-import { AddFavoriteLocation, RemoveFavoriteLocation } from "../../store/actions/location.actions";
+import { AddFavoriteLocation, RemoveFavoriteLocation, UpdateHomeLocation } from "../../store/actions/location.actions";
 import { MainLocation } from "../../classes/main-location";
-import { faCompass, faHeart as faOpenHeart } from '@fortawesome/free-regular-svg-icons'; 
+import { faCompass, faHeart as faUnfilledHeart } from '@fortawesome/free-regular-svg-icons'; 
 import { faFan, 
          faTint, 
          faWind, 
@@ -13,7 +13,9 @@ import { faFan,
          faCloud, 
          faLocationArrow, 
          faMoon,
-         faHeart} from '@fortawesome/free-solid-svg-icons';
+         faHeart,
+         faHome,
+         faThumbtack} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'current-weather-widget',
@@ -35,12 +37,14 @@ export class CurrentWeatherWidgetComponent implements OnInit {
     arrowIcon = faLocationArrow;
     compassIcon = faCompass;
     moonIcon = faMoon;
-    heartIcon = faHeart;
-    openHeartIcon = faOpenHeart;
+    filledHeartIcon = faHeart;
+    unfilledHeartIcon = faUnfilledHeart;
+    homeIcon = faHome;
+    thumbtackIcon = faThumbtack;
     
     constructor(private store: Store<IAppState>){}
     
-    ngOnInit() { }
+    ngOnInit() {}
     
     /* unlike with the sun, the moonrise can be after the moonset in any given day. 
        in this case we'll use the moonset of the subsequent day. 
@@ -82,28 +86,28 @@ export class CurrentWeatherWidgetComponent implements OnInit {
         return null;
     }
     
-    setMoonTimesColors(): {area: string, line: string, text: string}{
+    setMoonTimesColors(): {orbit: string, line: string, text: string}{
         const colors = {
-            area: '#d3d3d3de',
-            line: '#898989',
+            orbit: 'grey',
+            line: '#343a40',
             text: 'black'
         }
         if(!this.location.currentWeather.isDayTime){
-            colors.area = 'lightgrey';
+            colors.orbit = 'lightgrey';
             colors.line = 'white';
             colors.text = 'white';
         }
         return colors;
     }
     
-    setSunTimesColors(): {area: string, line: string, text: string}{
+    setSunTimesColors(): {orbit: string, line: string, text: string}{
         const colors = {
-            area: '#fff007a8',
-            line: '#898989',
+            orbit: '#fff007',
+            line: '#343a40',
             text: 'black'
         }
         if(!this.location.currentWeather.isDayTime){
-            colors.area = '#fcf89fd9';
+            colors.orbit = '#fcf89f';
             colors.line = 'white';
             colors.text = 'white';
         }
@@ -125,6 +129,13 @@ export class CurrentWeatherWidgetComponent implements OnInit {
         else{
             this.store.dispatch(new AddFavoriteLocation(this.location));
             this.location.isFavorite = true;
+        }
+    }
+    
+    updateHomeLocation(){
+        if(this.location.isHomeLocation === false){
+            this.location.isHomeLocation = true;
+            this.store.dispatch(new UpdateHomeLocation(this.location.details));
         }
     }
 

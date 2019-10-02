@@ -12,9 +12,9 @@
                     <li class="list-group-item" *ngFor="let location of searchResults; let i = index" [ngClass]="highlightedLocationIndex == i ? 'highlighted' : null" (click)="setLocation(location)">
                         <div class="autocomplete-container">
                             <ul class="list-inline location-font">
-                                <li class="list-inline-item">{{location.city}},</li>
-                                <li class="list-inline-item">{{location.regionID}},</li>
-                                <li class="list-inline-item">{{location.country}}</li>
+                                <li class="list-inline-item">{{location.details.city}},</li>
+                                <li class="list-inline-item">{{location.details.regionID}},</li>
+                                <li class="list-inline-item">{{location.details.country}}</li>
                             </ul>
                         </div>
                     </li>

@@ -4,19 +4,18 @@ import { FavoritesPageComponent } from '../components/favorites-page/favorites-p
 import { CurrentWeatherWidgetComponent } from '../components/current-weather-widget/current-weather-widget.component';
 
 const routes: Routes = [
-  {
-    path: 'location/:countryID/:regionID/:city',
-    component: HomePageComponent
-  },
-  {
-    path: 'favorites',
-    component: FavoritesPageComponent
-  },
     {
-    path: '**',
-    redirectTo: '/location/IL/TA/Tel_Aviv',
-    pathMatch: 'full'
-  },
+        path: 'location/:countryID/:regionID/:city',
+        component: HomePageComponent
+    },
+    {
+        path: 'favorites',
+        component: FavoritesPageComponent
+    },
+    {
+        path: '**',
+        component: HomePageComponent,
+    },
 ];
 
 export const appRouterModule = RouterModule.forRoot(routes);

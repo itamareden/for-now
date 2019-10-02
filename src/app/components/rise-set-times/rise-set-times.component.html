@@ -3,13 +3,15 @@
         <svg width="100%" [attr.height]="'calc(100% - ' + textHeight + 'px)'">
             <path [attr.d]="ellipsePath" fill="none" [attr.stroke]="colors.line" 
             stroke-width="1" stroke-dasharray="5,5" />
-            <path [attr.d]="arcPath" [attr.fill]="colors.area" [attr.stroke]="colors.line" stroke-width="1.4" />
+            <path [attr.d]="arcPath" [attr.fill]="'transparent'" [attr.stroke]="colors.orbit" stroke-width="2" />
             <path [attr.d]="underlinePath" [attr.stroke]="colors.line" stroke-width="1.3" />
-            <g [attr.stroke]="colors.line" stroke-width="2" [attr.fill]="colors.line">
+            <g [attr.stroke]="colors.line" stroke-width="1.3" [attr.fill]="colors.line">
+                <path [attr.d]="underlinePath"/>
                 <circle [attr.cx]="riseCoordinates[0]" [attr.cy]="riseCoordinates[1]" r="2" />
                 <circle [attr.cx]="setCoordinates[0]" [attr.cy]="setCoordinates[1]" r="2" />
-                <circle [attr.cx]="arcStartCoordinates[0]" [attr.cy]="arcStartCoordinates[1]" r="2" />
             </g>
+            <circle *ngIf="!setOccured" [attr.cx]="arcStartCoordinates[0]" [attr.cy]="arcStartCoordinates[1]" 
+            [attr.r]="setStarSize()" [attr.fill]="colors.orbit"/>
         </svg>
         <div class="clearfix text-container" [style.height]="textHeight + 'px'" [style.color]="colors.text">
             <span class="float-left">{{getTimeFormat(times.rise)}}</span>

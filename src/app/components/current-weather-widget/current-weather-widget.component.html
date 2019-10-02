@@ -1,16 +1,24 @@
 <!-- the condition inside the *ngIf will always be true. we use it to shorten: cw ...  -->
 <div class="cww-container" [ngClass]="setViewBasedOnTimeOfDay()" *ngIf="location.currentWeather as cw">
-    <div class="header">
-       <div class="clearfix">
+    <div class="cww-header">
+        <div class="clearfix">
             <div class="cww-location-details float-left">
-                <span class="display-4 cww-city">{{ location.city }},</span>
+                <span class="display-4 cww-city">{{ location.details.city }},</span>
                 <span class="display-4 cww-country">
-                    {{ location.country.length > 10 ? location.countryID : location.country }}
+                    {{ location.details.country.length > 10 ? location.details.countryID : location.details.country }}
                 </span>
             </div>
             <div class="float-right">
-                <fa-icon [icon]="location.isFavorite ? heartIcon : openHeartIcon" class="cww-heart-icon" 
-                (click)="toggleFavorite()"></fa-icon>
+                <fa-icon [icon]="location.isFavorite ? filledHeartIcon : unfilledHeartIcon" class="cww-heart-icon" (click)="toggleFavorite()"></fa-icon>
+            </div>
+            <div class="float-right">
+                <div>
+                    <fa-icon *ngIf="location.isHomeLocation; else thumbtack" [icon]="homeIcon" class="cww-home-icon"></fa-icon>
+                    <ng-template #thumbtack> 
+                        <fa-icon [icon]="thumbtackIcon" class="cww-thumbtack-icon" (click)="updateHomeLocation()" 
+                        placement="left" [openDelay]="500" ngbTooltip="Set as home location"></fa-icon>
+                    </ng-template>
+                </div>
             </div>
         </div>
         <div class="cww-update-time">
@@ -22,11 +30,11 @@
         <div class="cww-main-data">
             <div class="cww-weather-image-container d-block d-lg-inline-block">
                 <div class="cww-weather-image">
-                    <img [src]="cw.getWeatherImageSrc()" 
-                    [alt]="cw.description.text">
+                    <img [src]="cw.getWeatherImageSrc()" [alt]="cw.description.text">
                 </div>
             </div>
-            <div class="cww-temperature-container d-block d-lg-inline-block" placement="bottom" ngbTooltip="Actual / Feels Like">
+            <div class="cww-temperature-container d-block d-lg-inline-block" placement="bottom" 
+               ngbTooltip="Actual / Feels Like" [openDelay]="500">
                 <div>
                     <span class="cww-actual-temperature">
                         {{ms === "C" ? cw.temp.actual : cw.celsiusToFahrenheit(cw.temp.actual)}}° /
@@ -58,25 +66,24 @@
         <div class="cww-weather-data-container mb-5">
             <div class="cww-weather-data-set d-block d-md-inline-block">
                 <div class="clearfix">
-                    <div class="float-left cww-data-description" placement="right" ngbTooltip="Humidity">
+                    <div class="float-left cww-data-description" placement="right" ngbTooltip="Humidity" [openDelay]="500">
                         <fa-icon class="cww-fa-icon" [icon]="dropIcon"></fa-icon>
                     </div>
                     <div class="float-right cww-data-value">{{cw.humidity}}%</div>
                 </div>
                 <hr>
                 <div class="clearfix">
-                    <div class="float-left cww-data-description" placement="right" ngbTooltip="Wind Speed">
+                    <div class="float-left cww-data-description" placement="right" ngbTooltip="Wind Speed" [openDelay]="500">
                         <fa-icon class="cww-fa-icon" [icon]="windIcon"></fa-icon>
                     </div>
                     <span class="float-right cww-data-value">
-                        <fa-icon [icon]="fanIcon" [spin]="cw.wind.speed.value > 0 ? true : false" 
-                        [styles]="{'animation-duration': cw.setWindSpeed()}"></fa-icon>
+                        <fa-icon [icon]="fanIcon" [spin]="cw.wind.speed.value > 0 ? true : false" [styles]="{'animation-duration': cw.setWindSpeed()}"></fa-icon>
                         {{ms === "C" ? cw.setMetricValue(cw.wind.speed) : cw.convertMetricToImperial(cw.wind.speed)}}
                     </span>
                 </div>
                 <hr>
                 <div class="clearfix">
-                    <div class="float-left cww-data-description" placement="right" ngbTooltip="Wind Direction">
+                    <div class="float-left cww-data-description" placement="right" ngbTooltip="Wind Direction" [openDelay]="500">
                         <fa-icon class="cww-fa-icon" [icon]="compassIcon"></fa-icon>
                     </div>
                     <div class="float-right cww-data-value">
@@ -86,24 +93,24 @@
                 <hr class="d-block d-md-none">
             </div>
             <div class="cww-weather-data-set d-block d-md-inline-block">
-               <div class="clearfix">
-                    <div class="float-left cww-data-description" placement="right" ngbTooltip="UV">
+                <div class="clearfix">
+                    <div class="float-left cww-data-description" placement="right" ngbTooltip="UV" [openDelay]="500">
                         <fa-icon class="cww-fa-icon" [icon]="sunIcon"></fa-icon>
                     </div>
                     <span class="float-right cww-data-value">
                         {{ cw.uv.index }} ({{ cw.uv.text }})
                     </span>
                 </div>
-                <hr> 
-               <div class="clearfix">
-                    <div class="float-left cww-data-description" placement="right" ngbTooltip="Clouds Cover">
+                <hr>
+                <div class="clearfix">
+                    <div class="float-left cww-data-description" placement="right" ngbTooltip="Clouds Cover" [openDelay]="500">
                         <fa-icon class="cww-fa-icon" [icon]="cloudIcon"></fa-icon>
                     </div>
                     <span class="float-right cww-data-value">{{cw.cloudsCover}}%</span>
                 </div>
                 <hr>
                 <div class="clearfix">
-                    <div class="float-left cww-data-description" placement="right" ngbTooltip="Visibility">
+                    <div class="float-left cww-data-description" placement="right" ngbTooltip="Visibility" [openDelay]="500">
                         <fa-icon class="cww-fa-icon" [icon]="binocularsIcon"></fa-icon>
                     </div>
                     <div class="float-right cww-data-value">

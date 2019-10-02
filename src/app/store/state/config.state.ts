@@ -3,5 +3,5 @@ export interface IConfigState{
 }
 
 export const initialConfigState: IConfigState = {
-    measurementSystem: null,
+    measurementSystem: 'C',
 }

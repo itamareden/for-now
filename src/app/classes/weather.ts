@@ -68,19 +68,25 @@ export class Weather {
     setWindSpeed(): string{
         const speed = this.wind.speed.value;
         if(speed > 40){
-            return '0.4s';    
+            return '0.2s';    
         }
-        else if(speed > 30){
-            return '0.8s';
+        if(speed > 30){
+            return '0.5s';    
+        }
+        else if(speed > 25){
+            return '0.9s';
         }
         else if(speed > 20){
-            return '1.3s';
+            return '1.6s';
         }
-        else if(speed > 10){
-            return '2s';
+        else if(speed > 15){
+            return '2.3s';
+        }
+        else if(speed > 8){
+            return '3.5s';
         }
         else if(speed > 0){
-            return '3s';
+            return '6s';
         }
     }
     

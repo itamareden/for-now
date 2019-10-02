@@ -6,9 +6,10 @@ import { switchMap, map } from 'rxjs/operators';
 
 import { LocalStorageService } from '../../services/local-storage.service';
 import { EConfigActions, 
-         GetMeasurementSystem,
-         GetMeasurementSystemSuccess,
-         UpdateMeasurementSystem } from '../actions/config.actions';
+         GetMeasurementSystemOnLoad,
+         GetMeasurementSystemOnLoadSuccess,
+         UpdateMeasurementSystem, 
+         UpdateMeasurementSystemSuccess } from '../actions/config.actions';
 
 
 @Injectable()
@@ -18,16 +19,10 @@ export class ConfigEffects {
     
     @Effect() 
     getMeasurementSystem$ = this.actions$.pipe(
-        ofType<GetMeasurementSystem>(EConfigActions.getMeasurementSystem),
+        ofType<GetMeasurementSystemOnLoad>(EConfigActions.getMeasurementSystemOnLoad),
         switchMap(() => {
             const ms = this.storageSrvc.getMeasurementSystem();
-            if(ms === 'F'){
-                return of(new GetMeasurementSystemSuccess(ms));
-            }
-            else{
-                // the default system...
-                return of(new GetMeasurementSystemSuccess('C'));
-            }
+            return of(new GetMeasurementSystemOnLoadSuccess(ms));
         })
     )
     
@@ -35,7 +30,10 @@ export class ConfigEffects {
     updateMeasurementSystem$ = this.actions$.pipe(
         ofType<UpdateMeasurementSystem>(EConfigActions.updateMeasurementSystem),
         map(action => action.payload),
-        switchMap(newValue => of(new GetMeasurementSystemSuccess(newValue))),
+        switchMap(newValue => {
+            this.storageSrvc.setMeasurementSystem(newValue);
+            return of(new UpdateMeasurementSystemSuccess(newValue));
+        }),
     )
     
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from "rxjs";  
+import { Observable, throwError, of } from "rxjs";      // delete of!
 import { map, catchError } from "rxjs/operators";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 
@@ -23,19 +23,27 @@ export class WeatherDataService {
     constructor(private http: HttpClient) { }
     
     getCurrWeather(location: Location): Observable<Location>{
-        return this.http.get<ICurrentWeatherResponse[]>(`${this.proxy}${this.currWeatherUrl}${location.key}?apikey=${this.key}&details=true`)
-            .pipe(map(this.mapCurrWeather), map(weatherData => {
-                location.currentWeather = weatherData;
-                return location;
-            }), catchError(this.handleWeatherDataError.bind(this)))
+        return this.http.get<ICurrentWeatherResponse[]>(`${this.proxy}${this.currWeatherUrl}${location.details.key}?apikey=${this.key}&details=true`)
+            .pipe(
+                map(this.mapCurrWeather), 
+                map((weatherData: CurrentWeather) => {
+                        location.currentWeather = weatherData;
+                        return location;
+                }), 
+                catchError(this.handleWeatherDataError.bind(this))
+             )
     }
     
     getLocationForecast(location: MainLocation): Observable<MainLocation>{
-        return this.http.get<{DailyForecasts: IForecastWeatherResponse[]}>(`${this.proxy}${this.forcastUrl}${location.key}?apikey=${this.key}&details=true&metric=true`)
-            .pipe(map(this.mapForecastResponse, this), map(weatherData => {
-                location.forecastWeather = weatherData;
-                return location;
-            }), catchError(this.handleWeatherDataError.bind(this)))
+        return this.http.get<{DailyForecasts: IForecastWeatherResponse[]}>(`${this.proxy}${this.forcastUrl}${location.details.key}?apikey=${this.key}&details=true&metric=true`)
+            .pipe(
+                map(this.mapForecastResponse, this), 
+                map((weatherData: ForecastWeather[]) => {
+                        location.forecastWeather = weatherData;
+                        return location;
+                }), 
+                catchError(this.handleWeatherDataError.bind(this))
+            )
     }
     
     private mapCurrWeather(responseArr: ICurrentWeatherResponse[]): CurrentWeather{
@@ -45,18 +53,19 @@ export class WeatherDataService {
             icon: responseObj.WeatherIcon,
             text: responseObj.WeatherText,
         };
-        const temp = {
-            actual: Math.round(responseObj.Temperature.Metric.Value),
-            feelsLike: Math.round(responseObj.RealFeelTemperature.Metric.Value),
-        };
-        const isDayTime = responseObj.IsDayTime;
-        const humidity = responseObj.RelativeHumidity;
         const wind = {
             direction: responseObj.Wind.Direction.Degrees,
             speed: {
                 value: Math.round(responseObj.Wind.Speed.Metric.Value),
                 unit: responseObj.Wind.Speed.Metric.Unit,
             }
+        };
+        const isDayTime = responseObj.IsDayTime;
+        const humidity = responseObj.RelativeHumidity;
+        const cloudsCover = responseObj.CloudCover;
+        const temp = {
+            actual: Math.round(responseObj.Temperature.Metric.Value),
+            feelsLike: Math.round(responseObj.RealFeelTemperature.Metric.Value),
         };
         const uv = {
             index: responseObj.UVIndex,
@@ -66,7 +75,6 @@ export class WeatherDataService {
             value: Math.round(responseObj.Visibility.Metric.Value),
             unit: responseObj.Visibility.Metric.Unit,
         };
-        const cloudsCover = responseObj.CloudCover;
         return new CurrentWeather(localTime, description, wind, isDayTime, humidity, cloudsCover, temp, uv, visibility);
     }
     
