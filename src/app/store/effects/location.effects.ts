@@ -49,20 +49,26 @@ export class LocationEffects {
         ofType<GetSelectedLocation>(ELocationActions.getSelectedLocation),
         map(action => action.payload),
         switchMap(loc => {
+            console.log("starting...")
+            console.log(loc)
             // all selected locations are of type MainLocation
             const mainLocation = new MainLocation(loc.details);
             // if the location is favorite then mark it as so in the object
+            console.log("still OK...")
             if(this.storageSrvc.isLocationFavorite(mainLocation)){
                 mainLocation.isFavorite = true;
             }
+            console.log("OK 2")
             // if the location is the home location then mark it as so in the object
             if(this.storageSrvc.isLocationHome(mainLocation)){
                 mainLocation.isHomeLocation = true;
             }
+            console.log("OK 3")
             this.router.navigate(['/location/', 
                                   `${loc.details.countryID}`, 
                                   `${loc.details.regionID}`, 
                                   loc.details.city.split(" ").join("_")]);
+            console.log("OK 4")
             return of(new GetSelectedLocationSuccess(mainLocation));
         })
     )
@@ -72,6 +78,7 @@ export class LocationEffects {
         ofType<GetSelectedLocationData>(ELocationActions.getSelectedLocationData),
         map(action => action.payload),
         switchMap((mainLocation: MainLocation) => {
+            console.log("before fatal...")
             // send 2 parallel http requests and wait for response from both of them
             return forkJoin([this.weatherDataSrvc.getCurrWeather(mainLocation), this.weatherDataSrvc.getLocationForecast(mainLocation)]).pipe(
                 map(data => new GetSelectedLocationDataSuccess(data[1])),
