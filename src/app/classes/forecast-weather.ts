@@ -50,7 +50,7 @@ export class ForecastWeather extends Weather{
     
     setDurationInTimeFormat(lengthInMinutes: number): string{
         const hours = Math.floor(lengthInMinutes / 60);
-        const minutes = lengthInMinutes - 60 * hours;
+        const minutes = Math.round(lengthInMinutes - 60 * hours);
         const hoursStr = hours > 9 ? hours : '0' + hours;
         const minutesStr = minutes > 9 ? minutes : '0' + minutes;
         return `${hoursStr}:${minutesStr}`;
